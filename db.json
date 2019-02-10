@@ -2,6 +2,10 @@
   "tasks": [
     {
       "text": "First task"
+    },
+
+    {
+      "text": "Second task"
     }
   ],
   "posts": [

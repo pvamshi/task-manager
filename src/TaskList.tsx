@@ -1,63 +1,10 @@
-// // export interface TaskListProps {
-// //   taskListState: TaskListState;
-// //   init(): void;
-// // }
-
-// export type TaskListProps = StateFromProps & DispatchFromProps;
-
-// class TaskListContainer extends React.Component<TaskListProps, any> {
-//   constructor(private props: TaskListProps) {
-//     super(props);
-//     this.props.init();
-//   }
-
-//   public render() {
-//     return <p>test</p>;
-//   }
-// }
-
-// interface StateFromProps {
-//   taskListState: TaskListState;
-// }
-
-// interface DispatchFromProps {
-//   init: () => void;
-// }
-
-// const mapStateToProps = (state: RootState) => ({
-//   taskListState: state.taskListStore,
-// });
-
-// // const getTasks: ActionCreator<
-// //   ThunkAction<Promise<InitTasks>, void, void, InitTasks>
-// // > = () => {
-// //   return async (dispatch: Dispatch): Promise<InitTasks> => {
-// //       const tasks = await fetchTasks();
-// //       return dispatch(new InitTasks(tasks));
-// //   };
-// // };
-// // const getTasks: ActionCreator<
-// //   ThunkAction<Promise<InitTasks>, void, void, InitTasks>
-// // > = () => (dispatch: Dispatch): Promise<InitTasks> =>
-// //   fetchTasks().then((tasks: TaskModel[]) => dispatch(new InitTasks(tasks)));
-// // const mapDispatchToProps = (
-// //   dispatch: ThunkDispatch<void, void, InitTasks>,
-// // ): DispatchFromProps => ({
-// //   init: () => dispatch(getTasks()),
-// // });
-
-// const TaskList = connect<StateFromProps, DispatchFromProps, {}>(
-//   mapStateToProps,
-//   // mapDispatchToProps,
-// )(TaskListContainer);
-
-// export default TaskList;
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { RootState } from './stores';
-import { INIT, TaskListState } from './stores/task-list';
-
+import { TaskListActionTypes, TaskListState } from './stores/task-list';
+import Task from './Task';
+import './TaskList.style.css';
 interface StateProps {
   taskListState: TaskListState;
 }
@@ -74,11 +21,16 @@ export class TaskList extends React.Component<Props, any> {
   }
   public render(): JSX.Element {
     return (
-      <div>
-        {this.props.taskListState.tasks.map((task, index) => (
-          <p key={index}>{task.text}</p>
+      <ul>
+        {this.props.taskListState.tasks.map((_, index) => (
+          <li key={index}>
+            <Task
+              taskIndex={index}
+              focus={this.props.taskListState.focusIndex === index}
+            />
+          </li>
         ))}
-      </div>
+      </ul>
     );
   }
 }
@@ -91,7 +43,7 @@ export function mapStateToProps(state: RootState): StateProps {
 
 export function mapDispatchToProps(dispatch: Dispatch): DispatchProps {
   return {
-    init: () => dispatch({ type: INIT }),
+    init: () => dispatch({ type: TaskListActionTypes.INIT }),
   };
 }
 
